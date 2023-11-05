@@ -5,10 +5,7 @@ const submissionSchema = new mongoose.Schema({
     type: mongoose.Schema.Types.ObjectId,
     ref: 'Form'
   },
-  responses: [{
-    type: mongoose.Schema.Types.ObjectId,
-    ref: 'UserResponse'
-  }],
+  responses: [mongoose.Schema.Types.Mixed], 
 });
 
 export default mongoose.model('Submission', submissionSchema);

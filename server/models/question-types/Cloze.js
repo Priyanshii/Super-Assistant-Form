@@ -1,23 +1,20 @@
 import mongoose from "mongoose";
+import Question from "../Question.js";
 
 const clozeSchema = new mongoose.Schema({
-  sentence: {
+  preview: {
     type: String,
     required: true,
     trim: true,
-  },
-  blanks: {
-    type: [String],    
-    required: true,     
   },
   options: {
     type: [String],    
     required: true,     
   },
-  correctSequence: {
+  correctOptionsSequence: {
     type: Object,    
     required: true,     
   },
 });
 
-export default mongoose.model('ClozeQuestion', clozeSchema);
+export default mongoose.model('ClozeQuestion', clozeSchema, 'Question');

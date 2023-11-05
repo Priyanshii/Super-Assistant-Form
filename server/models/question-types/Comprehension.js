@@ -1,26 +1,36 @@
 import mongoose from "mongoose";
+import Question from "../Question";
 
 const comprehensionSchema = new mongoose.Schema({
   referenceText: {
-    type: String,       
-    required: true,     
+    type: String,
+    required: true,
   },
-  questions: [
-    {
-      text: {
-        type: String,      
-        required: true,     
+  questions: {
+    type: [
+      {
+        text: {
+          type: String,
+          required: true,
+        },
+        options: {
+          type: [String],
+          required: true,
+        },
+        correctAnswer: {
+          type: String,
+          required: true,
+        },
       },
-      options: {
-        type: [String],     
-        required: true,     
+    ],
+    validate: {
+      validator: function (questions) {
+        return questions.length > 0;
       },
-      correctAnswer: {
-        type: String,       
-        required: true,    
-      },
+      message: "At least one question is required.",
     },
-  ],
+  }
 });
 
-export default mongoose.model('ComprehensionQuestion', comprehensionSchema);
+export default Question.discriminator('ComprehensionQuestion', comprehensionSchema);
+

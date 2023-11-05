@@ -3,11 +3,13 @@ import { BrowserRouter as Router } from 'react-router-dom';
 import Pages from './pages';
 
 function App() {
-  <div className="w-full relative">fddfg
-    <Router>
-      <Pages />
-    </Router>
-  </div>
+  return (
+    <div>
+      <Router>
+        <Pages />
+      </Router>
+    </div>
+  )
 }
 
 export default App;

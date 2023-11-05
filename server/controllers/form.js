@@ -1,17 +1,12 @@
-import Form from "../models/Form";
-import Submission from "../models/Submission";
+import Form from "../models/Form.js";
+import Submission from "../models/Submission.js";
 
 export const createForm = async (req, res) => {
   try {
-    const { title, description, questions, author } = req.body;
-    const form = new Form({
-      title,
-      description,
-      questions,
-      author
-    });
-    await form.save();
-    res.json(form);
+    const { title, description, questions } = req.body;
+    console.log(req.body);
+    const response = await Form.create({ ...req.body });
+    res.status(201).json(response);
   } catch (error) {
     console.error(error);
     res.status(500).json({ error: 'Server Error' });
@@ -46,9 +41,8 @@ export const getFormResponses = async (req, res) => {
 
 export const getFormsList = async (req, res) => {
   try {
-    const userId = req.params.userId;
-    const forms = await Form.find({ author: userId });
-    res.json(forms);
+    const forms = await Form.find();
+    res.status(200).json(forms);
   } catch (error) {
     console.error(error);
     res.status(500).json({ error: 'Server Error' });
@@ -57,8 +51,8 @@ export const getFormsList = async (req, res) => {
 
 export const getFormWithQuestions = async (req, res) => {
   try {
-    const formId = req.params.formId;
-    const form = await Form.findById(formId).populate('questions');
+    const formId = req.params.id;
+    const form = await Form.findById(formId);
 
     if (!form) {
       return res.status(404).json({ error: 'Form not found' });

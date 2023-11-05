@@ -1,14 +1,13 @@
 import mongoose from "mongoose";
 
 const formSchema = new mongoose.Schema({
-  title: String, 
+  title: { 
+    type: String, 
+    required: true,
+    trim: true,
+  }, 
   description: String, 
-  questions: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Question' }], 
-  author: { 
-    type: mongoose.Schema.Types.ObjectId, 
-    ref: 'User',
-    required: true
-  },
+  questions: [mongoose.Schema.Types.Mixed],
 });
 
 export default mongoose.model('Form', formSchema);

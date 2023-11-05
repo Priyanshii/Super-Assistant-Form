@@ -3,7 +3,6 @@ import mongoose from "mongoose";
 const questionSchema = new mongoose.Schema({
   title: {
     type: String,
-    required: true,
     trim: true,
   },
   type: {

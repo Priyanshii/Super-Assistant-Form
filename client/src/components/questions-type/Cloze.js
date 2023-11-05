@@ -6,13 +6,47 @@ const modules = {
     ['underline'],
   ]
 }
-
-const Cloze = () => {
+const Cloze = ({ onUpdate, formSubmitted, handleError }) => {
 
   const [sentence, setSentence] = useState();
-  const [preview, setPreview] = useState();
+  const [preview, setPreview] = useState('');
   const [clozeOptions, setClozeOptions] = useState([]);
   const [underlinedWords, setUnderlinedWords] = useState([]);
+  const [error, setError] = useState({});
+
+  useEffect(() => {
+    if (formSubmitted.value) {
+      setError({});
+      const question = {};
+      if (preview === undefined) {
+        setError((prevError) => ({
+          ...prevError,
+          noSentence: "Sentence can't be empty"
+        }))
+      } else if (underlinedWords.length === 0) {
+        setError((prevError) => ({
+          ...prevError,
+          noUnderline: 'Underline the words to add correct options'
+        }))
+      }
+      if (underlinedWords.length < 2) {
+        setError((prevError) => ({
+          ...prevError,
+          optionLength: 'Please add atleast two options'
+        }))
+      } else {
+
+        question['type'] = 'Cloze';
+        question['preview'] = preview.replace(/<[^>]*>/g, '');
+        question['options'] = [...underlinedWords, ...clozeOptions];
+        question['correctSequenceOptions'] = underlinedWords;
+        console.log(question);
+        setError({});
+        onUpdate(question);
+        handleError({ Cloze: false });
+      }
+    }
+  }, [formSubmitted])
 
   useEffect(() => {
     console.log(sentence);
@@ -76,6 +110,8 @@ const Cloze = () => {
         <label>Sentence</label>
         <ReactQuill style={{ width: '100%' }} placeholder='Underline the words here to convert them into blanks' modules={modules} theme="snow" value={sentence} onChange={setSentence} />
       </section>
+      {formSubmitted && error?.noSentence && <p>{error?.noSentence}</p>}
+      {formSubmitted && error?.noUnderline && <p>{error?.noUnderline}</p>}
       <section>
         {
           underlinedWords.length > 0
@@ -103,6 +139,7 @@ const Cloze = () => {
       <button onClick={handleAddClozeOption}>
         Add Option
       </button>
+      {formSubmitted && error?.optionLength && <p>{error?.optionLength}</p>}
     </div>
   )
 }

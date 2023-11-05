@@ -1,6 +1,10 @@
 import mongoose from "mongoose";
+import Question from "../Question";
 
 const categorizeSchema = new mongoose.Schema({
+  description: {
+    type: String
+  },
   categories: [{
     type: String,
   }],
@@ -12,4 +16,4 @@ const categorizeSchema = new mongoose.Schema({
   },
 });
 
-export default mongoose.model('CategorizeQuestion', categorizeSchema);
+export default mongoose.model('CategorizeQuestion', categorizeSchema, 'Question');

@@ -1,21 +1,64 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { AiOutlineClose } from 'react-icons/ai';
 
-const Categorize = () => {
+const Categorize = ({ onUpdate, formSubmitted, handleError }) => {
+
+  const [description, setDescription] = useState();
   const [categoriesList, setCategoriesList] = useState(['', '']);
+  const [itemCategoryMapping, setItemCategoryMapping] = useState({});
+  const [error, setError] = useState({});
+
   const [itemsList, setItemsList] = useState([
     { 'item': '', 'category': '' },
     { 'item': '', 'category': '' }
   ]);
-  const [description, setDescription] = useState();
+
+  useEffect(() => {
+    if (formSubmitted.value) {
+      setError({});
+      const question = {};
+      const filteredCategoriesList = categoriesList.filter((category) => category.trim() !== '');
+      const filteredItemsList = itemsList.map((itemObject) => itemObject.item).filter((item) => item.trim() !== '');
+
+      const itemCategoryMapping = {};
+      itemsList.map((element, index) => {
+        itemCategoryMapping[element.item] = element.category;
+      });
+      console.log(itemCategoryMapping);
+
+      if (filteredCategoriesList.length < 2) {
+        setError((prevError) => ({
+          ...prevError,
+          categories: 'Please add atleast two categories'
+        }))
+      } else if (filteredItemsList.length < 2) {
+        setError((prevError) => ({
+          ...prevError,
+          items: 'Please add atleast two items'
+        }))
+      } else if (itemsList.some((element) => element.item === '' || element.category === '')) {
+        setError((prevError) => ({
+          ...prevError,
+          mapping: 'Please select category for all items'
+        }))
+      } else {
+        question['type'] = 'Categorize';
+        question['description'] = description;
+        question['categories'] = filteredCategoriesList;
+        question['items'] = filteredItemsList;
+        question['correctCategoryForItem'] = itemCategoryMapping;
+        console.log(question);
+        setError({});
+        onUpdate(question);
+        handleError({ Categorize: false });
+      }
+    }
+  }, [formSubmitted])
 
   const handleAddCategory = () => {
     setCategoriesList((categoriesList) => (
       [...categoriesList, '']
     ));
-    // const categoriesListLength = Object.keys(categoriesList).length;
-    // const newCategoriesList = { ...categoriesList, [categoriesListLength]: '' };
-    // setCategoriesList(newCategoriesList);
   }
 
   const handleCategoryNameChange = (e, index) => {
@@ -28,10 +71,6 @@ const Categorize = () => {
       });
       return updatedCategoriesList;
     });
-    // setCategoriesList((categoriesList) => ({
-    //   ...categoriesList,
-    //   [index]: e.target.value
-    // }));
   }
 
   const handleItemNameChange = (e, index) => {
@@ -64,11 +103,6 @@ const Categorize = () => {
         return categoriesList.filter((category, i) => i !== index);
       });
     }
-    // const updatedCategoriesList = Object.fromEntries(
-    //   Object.entries(categoriesList).filter(([key, value]) => key !== index)
-    // );
-
-    // setCategoriesList(updatedCategoriesList);
   }
 
   const handleRemoveItem = (index) => {
@@ -99,12 +133,17 @@ const Categorize = () => {
                 <div key={index} className='category'>
                   <input
                     type="text"
+                    placeholder={`Category ${index + 1}`}
                     value={category}
                     onChange={(e) => { handleCategoryNameChange(e, index) }}
                   />
-                  <button onClick={(e) => { handleRemoveCategory(index) }}>
-                    <AiOutlineClose />
-                  </button>
+                  {
+                    categoriesList.length > 2
+                    &&
+                    <button onClick={() => { handleRemoveCategory(index) }}>
+                      <AiOutlineClose />
+                    </button>
+                  }
                 </div>
               )
             }
@@ -112,6 +151,7 @@ const Categorize = () => {
           <button onClick={handleAddCategory}>
             Add Catgory
           </button>
+          {formSubmitted && error?.categories && <p>{error?.categories}</p>}
         </div>
       </div>
       <div>
@@ -123,13 +163,18 @@ const Categorize = () => {
               return (
                 <div key={index}>
                   <input
+                    placeholder={`Item ${index + 1}`}
                     type="text"
                     value={item}
                     onChange={(e) => { handleItemNameChange(e, index) }}
                   />
-                  <button onClick={(e) => { handleRemoveItem(index) }}>
-                    <AiOutlineClose />
-                  </button>
+                  {
+                    itemsList.length > 2
+                    &&
+                    <button onClick={(e) => { handleRemoveItem(index) }}>
+                      <AiOutlineClose />
+                    </button>
+                  }
                   <section>
                     <select value={category} onChange={(e) => { handleSelectedCategoryForItem(e, index) }}>
                       <option value="" disabled>select...</option>
@@ -151,10 +196,12 @@ const Categorize = () => {
           <button onClick={handleAddItems}>
             Add Items
           </button>
+          {formSubmitted && error?.items && <p>{error.items}</p>}
+          {formSubmitted && error?.mapping && <p>{error.mapping}</p>}
         </div>
       </div>
     </div>
   )
 }
 
-export default Categorize
+export default Categorize;

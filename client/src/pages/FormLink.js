@@ -6,4 +6,4 @@ const FormLink = () => {
   )
 }
 
-export default FormLink;
+export default FormLink

@@ -9,7 +9,7 @@ const Pages = () => {
     <Routes>
       <Route path="/" element={<FormsList />} />
       <Route path="/create" element={<CreateForm />} />
-      <Route path="/:id" element={<FormLink />} />
+      <Route path="/form-preview/:id" element={<FormLink />} />
     </Routes>
   )
 }
