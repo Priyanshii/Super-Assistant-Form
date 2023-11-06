@@ -6,7 +6,7 @@ const router = express.Router();
 router.post('/', createForm);
 router.get('/getAllForms', getFormsList);
 router.get('/preview/:id', getFormWithQuestions);
-router.post('/:id', submitForm);
+router.post('/submit/:id', submitForm);
 router.get('/response/:id', getFormResponses);
 
 export default router;

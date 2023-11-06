@@ -1,5 +1,6 @@
 import Form from "../models/Form.js";
 import Submission from "../models/Submission.js";
+import mongoose from "mongoose";
 
 export const createForm = async (req, res) => {
   try {
@@ -15,11 +16,14 @@ export const createForm = async (req, res) => {
 
 export const submitForm = async (req, res) => {
   try {
-    const { formId, responses } = req.body;
+    const formId = req.params.id; 
+    const submission = req.body;
+    const form = await Form.findById(formId);
     const response = new Submission({
-      formId,
-      responses,
+      formId: form._id,
+      responses: submission,
     });
+    console.log(response);
     await response.save();
     res.json(response);
   } catch (error) {
