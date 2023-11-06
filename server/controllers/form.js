@@ -61,7 +61,7 @@ export const getFormWithQuestions = async (req, res) => {
     if (!form) {
       return res.status(404).json({ error: 'Form not found' });
     }
-    res.json(form);
+    res.status(200).json(form);
     
   } catch (error) {
     console.error(error);

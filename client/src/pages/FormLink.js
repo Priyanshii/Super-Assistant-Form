@@ -56,7 +56,7 @@ const FormLink = () => {
     <div className='flex flex-col items-center justify-normal gap-4 w-[1100px] h-auto mx-auto my-8 py-7 shadow-lg border-[1px] border-solid border-[#cecaca] rounded'>
       <div className='flex flex-col items-center gap-4'>
         <h1 className='text-2xl font-medium text-[#414141]'>{title}</h1>
-        <p className='text-2xl font-medium text-[#414141]'>{description}</p>
+        <p className='text-base font-normal text-[#414141]'>{description}</p>
       </div>
       <div className='w-[80%] flex flex-col items-center gap-6'>
         {

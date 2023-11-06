@@ -19,7 +19,6 @@ const CreateForm = () => {
   const [formSubmitted, setFormSubmitted] = useState({ value: false });
   const [questionSubmitted, setQuestionSubmitted] = useState();
   const [isError, setIsError] = useState({ title: true });
-
   const navigate = useNavigate();
 
 
@@ -32,7 +31,7 @@ const CreateForm = () => {
     if ((!(Object.values(isError).some((error) => error === true)) && Object.keys(isError).length > 1)) {
       createForm();
     }
-  }, [formSubmitted])
+  }, [formSubmitted, isError])
 
   const handleQuestionUpdate = (updatedQuestion) => {
 
@@ -83,9 +82,13 @@ const CreateForm = () => {
   };
 
   const createForm = async () => {
-    const response = await axiosInstance.post(`/api/form`, formData);
-    console.log(response);
-    navigate("/", { replace: true });
+    try {
+      const response = await axiosInstance.post(`/api/form`, formData);
+      console.log(response);
+      navigate("/", { replace: true });
+    } catch (error) { 
+      console.log(error);
+    }
   }
 
   const handleTextChange = (e) => {
